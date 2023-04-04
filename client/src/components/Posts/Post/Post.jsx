@@ -3,6 +3,7 @@ import {
   Card,
   Container,
   CardActions,
+  ButtonBase,
   CardContent,
   Divider,
   CardMedia,
@@ -16,10 +17,12 @@ import { FaThumbsUp, FaRegThumbsUp } from "react-icons/fa";
 import { Delete } from "@mui/icons-material";
 import { MoreVert } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { deletePost, likePost } from "../../../actions/posts";
 
 const Post = ({ post, setCurrentId }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("profile"));
   const Likes = () => {
     if (post.likes?.length > 0) {
@@ -50,50 +53,59 @@ const Post = ({ post, setCurrentId }) => {
   };
   return (
     <Card sx={card} elevation={2}>
-      <CardMedia sx={media} image={post.selectedFile} title="title" />
-      <Container sx={overlay}>
-        <Typography variant="title" fontWeight={700}>
-          {post?.name}
-        </Typography>
-        <Typography variant="caption" component="p">
-          {moment(post.createdAt).fromNow()}
-        </Typography>
-      </Container>
-      {(user?.result?.googleId === post?.creator ||
-        user?.result?._id === post?.creator) && (
-        <IconButton
-          aria-label="settings"
-          onClick={() => setCurrentId(post._id)}
-          sx={overlay2}
-        >
-          <MoreVert />
-        </IconButton>
-      )}
+      <ButtonBase
+        onClick={() => navigate(`/posts/${post._id}`)}
+        component="a"
+        name="test"
+        sx={{
+          display: "block",
+          textAlign: "initial",
+        }}
+      >
+        <CardMedia sx={media} image={post.selectedFile} title="title" />
+        <Container sx={overlay}>
+          <Typography variant="title" fontWeight={700}>
+            {post?.name}
+          </Typography>
+          <Typography variant="caption" component="p">
+            {moment(post.createdAt).fromNow()}
+          </Typography>
+        </Container>
+        {(user?.result?.googleId === post?.creator ||
+          user?.result?._id === post?.creator) && (
+          <IconButton
+            aria-label="settings"
+            onClick={() => setCurrentId(post._id)}
+            sx={overlay2}
+          >
+            <MoreVert />
+          </IconButton>
+        )}
 
-      <CardContent sx={{ px: 2, py: 1 }}>
-        <Typography
-          variant="caption"
-          color="textSecondary"
-          textAlign="start"
-          component="p"
-        >
-          {post.tags.map((tag) => `#${tag} `)}
-        </Typography>
+        <CardContent sx={{ px: 2, py: 1 }}>
+          <Typography
+            variant="caption"
+            color="textSecondary"
+            textAlign="start"
+            component="p"
+          >
+            {post.tags.map((tag) => `#${tag} `)}
+          </Typography>
 
-        <Typography
-          variant="title"
-          fontWeight={700}
-          textAlign="start"
-          color="textPrimary"
-        >
-          {post.title}
-        </Typography>
+          <Typography
+            variant="title"
+            fontWeight={700}
+            textAlign="start"
+            color="textPrimary"
+          >
+            {post.title}
+          </Typography>
 
-        <Typography variant="caption" color="textSecondary" component="p">
-          {post.message}
-        </Typography>
-      </CardContent>
-
+          <Typography variant="caption" color="textSecondary" component="p">
+            {post.message}
+          </Typography>
+        </CardContent>
+      </ButtonBase>
       <Divider variant="middle" textAlign="center" sx={{ mb: 1 }} />
       <CardActions sx={cardActions}>
         <Button

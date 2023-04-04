@@ -3,9 +3,23 @@ import mongoose from "mongoose";
 
 
 export const getPosts = async (req, res) => {
+    const { page } = req.query;
     try {
-        const postMessages = await PostMessage.find();
-        res.status(200).json(postMessages);
+        const limit = 8;
+        const startIndex = (Number(page) - 1) * limit;
+        const total = await PostMessage.countDocuments({});
+        const postMessages = await PostMessage.find().sort({ _id: -1 }).limit(limit).skip(startIndex);
+        res.status(200).json({ data: postMessages, currentPage: Number(page), numberOfPages: Math.ceil(total / limit) });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+};
+
+export const getPost = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const post = await PostMessage.findById(id);
+        res.status(200).json(post);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
@@ -68,4 +82,15 @@ export const likePost = async (req, res) => {
     const updatedPost = await PostMessage.findByIdAndUpdate(id, post, { new: true });
 
     res.status(200).json(updatedPost);
+};
+
+export const searchPost = async (req, res) => {
+    const { searchQuery, tags } = req.query;
+    try {
+        const title = RegExp(searchQuery, 'i');
+        const posts = await PostMessage.find({ $or: [{ title }, { tags: { $in: tags.split(',') } }] });
+        res.status(200).json({ data: posts });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
 };

@@ -19,7 +19,7 @@ const Form = ({ currentId, setCurrentId }) => {
 
   const post = useSelector((state) =>
     currentId
-      ? state.postsReducer.find((message) => message._id === currentId)
+      ? state.postsReducer.posts.find((message) => message._id === currentId)
       : null
   );
 
@@ -52,7 +52,7 @@ const Form = ({ currentId, setCurrentId }) => {
 
   if (!user?.result?.name) {
     return (
-      <Paper elevation={3} sx={{ borderRadius: 3, p: 3 }}>
+      <Paper elevation={2} sx={{ borderRadius: 3, p: 3 }}>
         <Typography variant="title" fontWeight={700} align="center">
           Please Sign In to create your own memories and like other's memories.
         </Typography>
