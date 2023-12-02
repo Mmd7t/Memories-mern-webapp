@@ -58,7 +58,7 @@ const Navbar = () => {
           to="/"
           sx={{ textDecoration: "none", ml: 2 }}
         >
-          TypeLine
+          Memories
         </Typography>
         <Box sx={{ ml: "auto" }}>
           <Grid
